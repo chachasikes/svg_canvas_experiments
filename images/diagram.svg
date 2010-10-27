@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_flows "http://ns.adobe.com/Flows/1.0/">
+]>
+<svg version="1.1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+	 x="0px" y="0px" width="385px" height="295px" viewBox="-13.62 -14.717 385 295" enable-background="new -13.62 -14.717 385 295"
+	 xml:space="preserve">
+<defs>
+</defs>
+<rect x="291.598" y="210.5" fill="#000000" stroke="#B68694" width="50" height="50" id="top1" />
+<rect x="291.598" y="140.5" fill="#FEEF81" stroke="#B68694" width="50" height="50" id="top2" />
+<rect x="291.598" y="70.5" fill="#FEEF81" stroke="#B68694" width="50" height="50" id="node1" />
+<rect x="251.598" y="0.5" fill="#FEEF81" stroke="#B68694" width="50" height="50" id="node2" />
+<line fill="#FEEF81" stroke="#000000" x1="250.511" y1="51.587" x2="290.729" y2="71.152"/>
+<line fill="#FEEF81" stroke="#B68694" x1="251.598" y1="50.5" x2="291.815" y2="141.804"/>
+<line fill="#FEEF81" stroke="#B68694" stroke-width="1.0548" x1="250.511" y1="50.5" x2="292.902" y2="215.717"/>
+<rect x="41.598" y="210.5" fill="#FEEF81" stroke="#B68694" width="50" height="50"/>
+<rect x="41.598" y="140.5" fill="#FEEF81" stroke="#B68694" width="50" height="50"/>
+<rect x="41.598" y="70.5" fill="#FEEF81" stroke="#B68694" width="50" height="50"/>
+<rect x="1.598" y="0.5" fill="#FEEF81" stroke="#B68694" width="50" height="50"/>
+<line fill="#FEEF81" stroke="#B68694" x1="0.511" y1="51.587" x2="40.729" y2="71.152"/>
+<line fill="#FEEF81" stroke="#B68694" x1="1.598" y1="50.5" x2="41.815" y2="141.804"/>
+<line fill="#FEEF81" stroke="#B68694" stroke-width="1.0548" x1="0.511" y1="50.5" x2="42.902" y2="215.717"/>
+<line fill="#FEEF81" stroke="#B68694" x1="53.771" y1="25.5" x2="252.685" y2="25.5"/>
+</svg>

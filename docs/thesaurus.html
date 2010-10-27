@@ -1,0 +1,538 @@
+<html>
+<head>
+<title>Lightweight Visual Thesaurus, v. 0.2</title>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<script type="text/javascript" src="javascript/prototype.js"></script>
+
+<script type="text/javascript">
+
+// From Benjamin Joffe, http://www.random.abrahamjoffe.com.au/public/JavaScripts/canvas/fonts.htm
+var tahoma8=new Image();
+tahoma8.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAikAAAANAgMAAAARXxaEAAAABlBMVEX///8AAABVwtN+AAACCklEQVR4Xu3UwaokKxgD4ATiPkL7PhHsvQf0/V/lgl1F02fuYZjF7CabsqQWX4Vf8UP+RQCMAgIi/kZyPxUAawV5bdKEcn3zthiEBz+Idx5llq9V1s62VnPFfEw3Ls6W9lyptCtdNxrSOFlWKatxuixU5CEIU8O+RJdFuiwl/maBfrBIJoUQlul+LOmU7CC3xUR6MlQEQxmyicrVhUpxflp4WzrworQyW5mrla9VR22PltWya3kOZXgoz9mlEAPRsVRijFFRab4tHoqQBFEVAmfIffY90o10aUTHYgPEy0KgYF4WDMXXj43ufsrmw5Iy3J24lxniOfdAW+bjw9KQeGjEipGEmL3MDTfJwxnKw4RnEmGvXywTBUEh0I5lH8uTt8UPSVUjqci7l2YdS1evqMtsQW4LcSyCdpQkfR0LJ3pABdECIuNY9prsZ4UOuAM5FnzrxRy3hdzjttAy622B6bdlEK8XiDiWyMPPjYFhkMDdC9694PRCwI/bwpel3hZjSCJpiRj37PKa3SgzHZKNJDZPgCMQpXQkRt80BmWQwT0vJr/NyyvteWbX5Ysexd1eLduNfYmUVL7wfJ3pYFtrua4osxGc1kZaLstG49x9krMRjbFBl0kGWIZ9LDKptwUdxGcM5F7xY/vnGL9JmQCCK28LhOt++b+UgPhTS/mjexfXvasIKhugPyz/AfyHcZZwWdfAAAAAAElFTkSuQmCC';
+tahoma8.c='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789!@#$%^&*()-=[]\\;\',./_+{}|:"<>?`~';
+tahoma8.w=[6,6,5,6,6,4,6,6,2,3,5,2,8,6,6,6,6,4,5,4,6,6,8,6,6,5,7,6,7,7,6,6,7,7,4,5,6,5,8,7,8,6,8,7,6,6,7,6,10,6,6,6,3,6,6,6,6,6,6,6,6,6,6,4,10,8,6,11,8,7,6,4,4,4,8,4,4,4,4,2,4,4,4,6,8,5,5,4,4,4,8,8,5,6,8];
+tahoma8.h=13;
+
+var tahoma8bold=new Image();
+tahoma8bold.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoEAAAANAgMAAACr0FyhAAAABlBMVEX///8AAABVwtN+AAACSUlEQVR4Xu3VQYrjQAwF0C+w9m6Q7qOC1P4LSve/yiA7cUK6p2mGmd38hVMKmHpIdhl/If8jAYAQwrpQ/OsE7jFkrzVXwIDt0CRBZFy0p1ABAzP0XX/FpaScnqVl6mMxozcZpUuXU1dl5JiqZswKpaJkYXeWltJHVMiGcAFCKDaCLYRdwi4uoYOfhJBvhWPCzCQMpgrLES7JKVNNzQwql5ASZn2HgiaBQz2wy6b9K7saSh7CHQbsgDyFJEag46NkOUtHOTPH9GTF0ZbUXMwxrbd15mihPoUl4TPXZ6HSQ8NMIaFyCK2FN7952S1v2DY1sQmD1oTtilehNVuv/uSY4DWc2VsdpVmZxCUEc5TC1LMM3ssl8bHSH0KnSrBkmoSHo4WKtdFHwZTMW7Yw8rZ2EdKag0ZtLYxXIQEq4AL4Kay7cL0I6SPIUmPJknjpoZuewp2pU+Yydeo6hbUkFOsQGnQncoSZeQu3XekfE1CL5tQpxCmstaDBpgKbAWMAPIWhXwg1D2G1UKXyEupjyjtSphx/E3YKuZQqPISE+mohzdDCWmI4hAroOeVLeD2HZw8NiPVJOF+FaKHJGL2DxCG0pzBHC3EX2ik0kNYrHFdVkHchN2OtD8NooQSuKYsiB96fw3s8zzdlSp20FvJ4U+ix/CH0jLyfNqFl6pPMauEohZ5zRsVDWKH0UWOBHgV2NYA9lEdnZBES/J0QJAxvaTRfCns7dr4N8ZNU7CG4cgkxwQ3P8/DryDogfyh0/DQvwuubghtiQ7Ug+Sb8BYH3sjwcbInrAAAAAElFTkSuQmCC';
+tahoma8bold.c='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789!@#$%^&*()-=[]\\;\',./_+{}|:"<>?`~';
+tahoma8bold.w=[7,7,6,7,7,4,7,7,3,4,7,3,11,7,7,7,7,5,6,5,7,7,9,7,7,6,8,7,7,8,6,6,8,8,5,6,7,6,10,7,8,7,8,8,7,7,8,7,11,7,7,7,3,7,7,7,7,7,7,7,7,7,7,3,10,9,7,13,9,9,7,5,5,5,9,5,5,6,3,3,3,3,6,7,9,7,7,7,3,6,9,9,6,6,10];
+tahoma8bold.h=15;
+
+CanvasRenderingContext2D.prototype.drawString=function(s, f, x, y){
+	y=Math.round(y);
+	var z=x=Math.round(x),t,i,j;
+	if(!f.f){
+		f.f=[t=0],i=0,j=f.w.length;
+		while(++i<j)f.f[i]=t+=f.w[i-1];
+	}
+	s=s.split(''),i=0,j=s.length;
+	while(i<j)if((t=f.c.indexOf(s[i++]))>=0)
+		this.drawImage(f,f.f[t],0,f.w[t],f.height,x,y,f.w[t],f.height),x+=f.w[t];
+		else if(s[i-1]=='\n')x=z,y+=f.h;
+}
+// End Joffe: Thanks Benjamin!
+
+
+var World = Class.create()
+World.prototype = {
+	initialize: function(element) {
+		this.element = element
+		this.things = new Array()
+	},
+
+	add: function(thing) {
+		this.things[this.things.length] = thing
+	},
+
+	isInBounds: function(position) {
+		return position.x < this.element.width && position.y < this.element.height
+	},
+
+	userClicked: function(position) {
+		if (this.isInBounds(position)) {
+			for (var i = 0; i < this.things.length; i++) {
+				var thing = this.things[i]
+				if (thing.intersects(position.x, position.y)) {
+					thing.onDown(position)
+				}
+			}
+		}
+	},
+
+	userReleased: function(position) {
+		for (var i = 0; i < this.things.length; i++) {
+			this.things[i].onUp(position)
+		}
+	},
+
+	userMovedTo: function(position) {
+		ctx.clearRect(0, 0, $("map").width, $("map").height)
+		for (var i = 0; i < this.things.length; i++) {
+			var thing = this.things[i]
+			thing.onOver(position)
+			thing.show()
+		}
+	},
+
+	doubleClick: function(position) {
+		if (this.isInBounds(position)) {
+			for (var i = 0; i < this.things.length; i++) {
+				var thing = this.things[i]
+				if (thing.isClickable && thing.intersects(position.x, position.y)) {
+					find(thing.word)
+				}
+			}
+		}
+	},
+
+	draw: function() {
+		ctx.clearRect(0, 0, $("map").width, $("map").height)
+		for (var i = 0; i < this.things.length; i++) {
+			this.things[i].situate()
+			this.things[i].show()
+		}
+	},
+
+	reset: function() {
+		ctx.clearRect(0, 0, $("map").width, $("map").height)
+		this.things = new Array()
+	}
+}
+
+var Node = Class.create();
+Node.prototype = {
+	initialize: function(word, context, position, color, radius, font) {
+		this.word = word
+		this.context = context
+		this.position = position
+		this.radius = radius
+		this.fillStyle = this.originalFillStyle = color
+		this.repellants = new Array()
+		this.edges = new Array()
+		this.move = 3
+		this.isClickable = false
+		this.font = font
+	},
+
+	onDown: function(position) {
+		this.dragging = position
+		this.fillStyle = 'yellow'
+		this.show()
+	},
+
+	onUp: function(position) {
+		this.dragging = undefined
+		this.fillStyle = this.originalFillStyle
+		this.situate()
+		this.show()
+	},
+
+	onOver: function(position) {
+		if (this.intersects(position.x, position.y)) {
+			this.rolloverContent()
+			this.fillStyle = "orange"
+		} else {
+			this.fillStyle = this.originalFillStyle
+		}
+
+		if (this.dragging != undefined) {
+			deltaX = position.x - this.dragging.x
+			deltaY = position.y - this.dragging.y
+			this.position.x += deltaX
+			this.position.y += deltaY
+
+			this.dragging = position
+		} else {
+			this.situate()
+		}
+	},
+
+	rolloverContent: function() {
+	},
+
+	distanceFrom: function(other) {
+		var x = other.position.x - this.position.x
+		var y = other.position.y - this.position.y
+		return Math.sqrt(x * x + y * y)
+	},
+
+	hasCollisionWith: function(other) {
+		return this.distanceFrom(other) <= (this.radius + other.radius)
+	},
+
+	intersectsWith: function(other) {
+		return this.distanceFrom(other) <= this.radius
+	},
+
+	intersects: function(x, y) {
+		return this.intersectsWith({position: {x: x, y: y}})
+	},
+
+	moveAwayFrom: function(r) {
+		this.moveAwayFrom(r, 1)
+	},
+
+	moveAwayFrom: function(r, multiplier) {
+		var move = this.move * multiplier
+		if (r.position.x < this.position.x) {
+			this.position.x += this.move
+		} else if (r.position.x > this.position.x) {
+			this.position.x -= this.move
+		} else {
+			var chance = Math.random()
+			if (chance > .5) {
+				this.position.x += this.move
+			} else {
+				this.position.x -= this.move
+			}
+		}
+		if (r.position.y < this.position.y) {
+			this.position.y += this.move
+		} else if (r.position.y > this.position.y) {
+			this.position.y -= this.move
+		} else {
+			var chance = Math.random()
+			if (chance > .5) {
+				this.position.y += this.move
+			} else {
+				this.position.y -= this.move
+			}
+		}
+	},
+
+	situate: function() {
+		if (this.dragging != undefined) {
+			return
+		}
+
+		for (var i = 0; i < this.repellants.length; i++) {
+			var r = this.repellants[i]
+			if (this.distanceFrom(r) < repelLimit) {
+				this.moveAwayFrom(r)
+			}
+		}
+
+		for (var i = 0; i < this.edges.length; i++) {
+			var r = this.edges[i].r
+			this.moveAwayFrom(r)
+		}
+
+		for (var i = 0; i < this.edges.length; i++) {
+			var maxDistance = this.edges[i].d
+			var r = this.edges[i].r
+			while (this.distanceFrom(r) > maxDistance) {
+				if (r.position.x < this.position.x) {
+					this.position.x--
+				} else if (r.position.x > this.position.x) {
+					this.position.x++
+				}
+
+				if (r.position.y < this.position.y) {
+					this.position.y--
+				} else if (r.position.y > this.position.y) {
+					this.position.y++
+				}
+			}
+		}
+
+		for (var i = 0; i < this.repellants.length; i++) {
+			var r = this.repellants[i]
+			while (this.hasCollisionWith(r)) {
+				this.moveAwayFrom(r)
+			}
+		}
+	},
+
+	show: function() {
+		for (var i = 0; i < this.edges.length; i++) {
+			var other = this.edges[i].r
+			this.context.strokeStyle = 'grey'
+			this.context.lineWidth = 1.0
+			this.context.beginPath()
+			this.context.moveTo(this.position.x, this.position.y)
+			this.context.lineTo(other.position.x, other.position.y)
+			this.context.closePath()
+			this.context.stroke()
+		}
+		this.draw()
+	},
+
+	draw: function() {
+		this.context.drawString(prettyWord(this.word), this.font, this.position.x + 2, this.position.y + 2)
+
+		this.context.fillStyle = this.fillStyle
+		this.context.arc(this.position.x, this.position.y, 3, 0, Math.PI*2, true)
+		this.context.fill()
+	},
+
+	addRepellant: function(r) {
+		if (r == this) {
+			return
+		}
+		for (var i = 0; i < this.repellants.length; i++) {
+			if (r == this.repellants[i]) {
+				return
+			}
+		}
+		this.repellants[this.repellants.length] = r
+	},
+
+	addEdge: function(r, maxDistance) {
+		this.edges[this.edges.length] =  { r: r, d: maxDistance }
+	}
+}
+
+var Sense = Class.create()
+Sense.prototype.extend(Node.prototype).extend({
+	draw: function() {
+		this.context.fillStyle = this.fillStyle
+		this.context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, true)
+		this.context.fill()
+	},
+        rolloverContent: function() {
+                $("rollover").innerHTML = prettyWord(this.word)
+        }
+})
+
+function prettyWord(word) {
+	var pretty = word
+	while (pretty.indexOf('_') > -1) {
+		pretty = pretty.replace('_', ' ')
+	}
+	return pretty
+}
+
+function prepareWord(word) {
+	var prepared = word
+	while (prepared.indexOf(' ') > -1) {
+		prepared = prepared.replace(' ', '_')
+	}
+	return prepared
+}
+
+function getRelativePosition(e) {
+	return {x: e.clientX - $("map").offsetLeft, y: e.clientY - $("map").offsetTop};
+}
+
+function on_mousemove(e) {
+	var position = getRelativePosition(e)
+	world.userMovedTo(position)
+}
+
+function on_doubleclick(e) {
+	var position = getRelativePosition(e)
+	world.doubleClick(position)
+}
+
+function on_mousedown(e) {
+	var position = getRelativePosition(e)
+	world.userClicked(position)
+	clearInterval(drawInterval)
+}
+
+function on_mouseup(e) {
+	var position = getRelativePosition(e)
+	world.userReleased(position)
+	drawInterval = window.setInterval(draw, timeTilDraw)
+}
+
+function draw() {
+	if (almostThere > 0) {
+		almostThere++
+		if (almostThere > 10) {
+			almostThere = 0
+			finishConstructingTree()
+		}
+	}
+
+	world.draw()
+}
+
+var ctx
+var world
+var drawInterval
+var startX
+var startY
+var repelLimit = 50 // need to be most repelled by home
+var timeTilDraw = 100
+var distanceToSense = 60
+var distanceToWord = 60
+
+var url = "find.php"
+
+var cache = new Array()
+
+function resizeCanvas() {
+	$("map").width = window.innerWidth
+	$("map").height = window.innerHeight
+	startX = $("map").width / 2
+	startY = $("map").height / 2
+}
+
+function start() {
+    document.search.word.focus()
+    resizeCanvas()
+    ctx = $("map").getContext("2d")
+    world = new World($("map"))
+
+    window.addEventListener("mousemove", on_mousemove, false)
+    window.addEventListener("mousedown", on_mousedown, false)
+    window.addEventListener("mouseup", on_mouseup, false)
+    window.addEventListener("dblclick", on_doubleclick, false)
+    window.addEventListener("resize", resizeCanvas, false)
+
+    drawInterval = window.setInterval(draw, timeTilDraw)
+
+    $("word").value = "better"
+    go()
+}
+
+function go() {
+	find(prepareWord($("word").value))
+	$("word").value = ""
+}
+
+function find(word) {
+	world.reset()
+	if (cache[word] != undefined) {
+		displaySynonyms(word, cache[word])
+	} else {
+		new Ajax.Request(url,
+		          {
+				   parameters: "word=" + word,
+				   onComplete: function(request) {
+						displaySynonyms(word, request.responseText)
+						cache[word] = request.responseText
+				   }
+				  }
+				 )
+	}
+}
+
+var synonyms
+function displaySynonyms(word, response) {
+	$("rollover").innerHTML = ""
+	synonyms = new Array()
+	senseHash = new Array()
+	almostThere = 0
+
+	var senses = new Array()
+// TODO handle "nothing matched WORD"
+	parseInto(response, senses, synonyms)
+	constructTree(word, senses, synonyms)
+	cacheForFuture(synonyms)
+	almostThere = 1
+}
+
+
+function cacheForFuture(synonyms) {
+	for (var i = 0; i < synonyms.length; i++) {
+		var word = synonyms[i].word
+		new Ajax.Request(url,
+				  {
+				   parameters: "word=" + word,
+				   onComplete: function(request) {
+						cache[word] = request.responseText
+				   }
+				  }
+				 )
+	}
+}
+
+function parseInto(response, senses, synonyms) {
+	var lines = response.split("\n");
+	for (var i = 0; i < lines.length; i++) {
+		var glossData = lines[i].split("^");
+		if (glossData.length == 2) {
+			senses[hashPrefix+glossData[0]] = glossData[1];
+		} 
+		var synonymData = lines[i].split("|");
+		if (synonymData.length == 2) {
+			var senseIds = synonymData[1].split("-");
+			synonyms[synonyms.length] = { word: synonymData[0], senseIds: senseIds };
+		}
+	}
+}
+var hashPrefix = "h" // used in these two functions
+var senseHash = new Array()
+var home
+function constructTree(word, senses, synonyms) {
+	home = new Node(word, ctx, {x: startX, y: startY}, "blue", 10, tahoma8bold)
+	world.add(home)
+
+	for (var i = 0; i < synonyms.length; i++) {
+		var senseIds = synonyms[i].senseIds
+		for (var j = 0; j < senseIds.length; j++) {
+			var sense = senseHash[hashPrefix+senseIds[j]]
+			if (sense == undefined) {
+				sense = new Sense(senses[hashPrefix+senseIds[j]], ctx, {x: startX, y: startY}, "green", 6)
+				sense.addEdge(home, distanceToSense + 3 * synonyms.length)
+				world.add(sense)
+				senseHash[hashPrefix+senseIds[j]] = sense
+			}
+		}
+	}
+	setupRepellants()
+}
+var almostThere = 0
+function finishConstructingTree() {
+	for (var i = 0; i < synonyms.length; i++) {
+		var position = {x: startX, y: startY}
+		var aSensePosition
+		var node = new Node(synonyms[i].word, ctx, position, "blue", 12, tahoma8)
+		node.isClickable = true
+		var senseIds = synonyms[i].senseIds
+		for (var j = 0; j < senseIds.length; j++) {
+			var sense = senseHash[hashPrefix+senseIds[j]]
+			node.addEdge(sense, distanceToWord)
+			aSensePosition = sense.position
+		}
+		position.x = aSensePosition.x
+		position.y = aSensePosition.y
+		node.moveAwayFrom(home, 2)
+		world.add(node)
+	}
+	setupRepellants()
+}
+
+function setupRepellants() {
+	for (var i = 1; i < world.things.length; i++) {
+		for (var j = 0; j < world.things.length; j++) {
+			if (i != j) {
+				world.things[i].addRepellant(world.things[j])
+			}
+		}
+	}
+}
+
+</script>
+
+</head>
+
+<body onLoad="start()">
+
+<div id="wrapper" style="position: absolute; top: 0; left: 0; z-index: 0">
+	<canvas id="map" width="2000" height="2000"></canvas>
+</div>
+<div style="position: absolute; top: 10; left: 20; z-index: 2">
+	<form name="search" onSubmit="go();return false">
+	<table width="600">
+	<tr><td colspan="2">
+	<a href="about.html">About the Lightweight Visual Thesaurus</a>
+	</td></tr>
+	<tr valign="top"><td>
+
+	<input type="text" id="word" name="word"/>
+	</td><td width="100%">
+	<input type="submit" value="Find Synonyms"/>
+	</td></tr>
+	<tr><td colspan="2">
+	<span id="rollover"></span>
+	</td></tr></table>
+	</form>
+</div>
+
+</body>
+</html>
+
