@@ -34,10 +34,12 @@ var makeFancy = function(svg) {
 var makeData = function(svg) {
   // text, color, parent
   var data = {
-    'node0': {'id': 'node0', 'text': 'hello 0', 'fill': '#00ff00', 'stroke': '#ddd', 'parent': null},
-    'node1': {'id': 'node1', 'text': 'hello 1', 'fill': '#00ff33', 'stroke': '#bbb', 'parent': 'node0'},
-    'node2': {'id': 'node2', 'text': 'hello 2', 'fill': '#00ff66', 'stroke': '#999', 'parent': 'node1'},
-    'node3': {'id': 'node3', 'text': 'hello 3', 'fill': '#00ff99', 'stroke': '#777', 'parent': 'node2'}
+    'node0': {'id': 'node0', 'text': 'hello 0', 'fill': '#ED83A2', 'fillStroke': '#ddd', 'stroke': '#ddd', 'parent': null, 'scalar': 1},
+    'node1': {'id': 'node1', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 3},
+/*     'node4': {'id': 'node4', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 0.5}, */
+/*     'node5': {'id': 'node5', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 2}, */
+    'node2': {'id': 'node2', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node1', 'scalar': 1.5},
+    'node3': {'id': 'node3', 'text': 'hello 3', 'fill': '#FC064C', 'fillStroke': '#ddd', 'stroke': '#777', 'parent': 'node2', 'scalar': 1.5}
   };
 
 /*
@@ -51,27 +53,40 @@ var makeData = function(svg) {
 var buildNodeMap = function(svg, data) {
   var square = {
     'width': 30,
-    'height': 40,
-    'xOffset' : 10,
+    'height': 30,
+    'xOffset' : 140,
     'yOffset' : 80,
     'fill' : '#666666',
     'stroke' : '#444444',
-    'strokeWidth' : 2
+    'strokeWidth' : 1
   }
-  var nodeCounter = 0;
-
-
+  var rowCounter = 0;
 
   // Build Boxes
   for (node in data) {
-    // data[node].text
-    svg.rect(square.xOffset  * nodeCounter, square.yOffset * nodeCounter, square.width, square.height, {
+    
+    var position;
+    if(data[node].parent !== null) {
+      var parent = $('#' + data[node].parent, svg.root());
+      var currentBox = $('#' + data[node].id, svg.root());
+      position = Array (
+        square.xOffset  * rowCounter,
+        square.yOffset * rowCounter,
+        square.width * data[node].scalar,
+        square.height * data[node].scalar
+      );
+    }
+    else {
+      position = Array (square.xOffset  * rowCounter, square.yOffset * rowCounter, square.width * data[node].scalar, square.height * data[node].scalar);
+    }
+
+    svg.rect(position[0], position[1], position[2], position[3], {
       id: data[node].id,
-      fill: square.fill,
+      fill: data[node].fill,
       stroke: square.stroke,
       strokeWidth: square.strokeWidth
     });
-    nodeCounter++;
+    rowCounter++;
   }
 
   // Build Lines
@@ -82,28 +97,20 @@ var buildNodeMap = function(svg, data) {
       var parent = $('#' + data[node].parent, svg.root());
       var currentBox = $('#' + data[node].id, svg.root());
       line = Array (
-        parent.attr('width'),
-        parent.attr('height'),
+        Number(parent.attr('width')) + Number(parent.attr('x')),
+        Number(parent.attr('height')) + Number(parent.attr('y')),
         Number(currentBox.attr('x')),
         Number(currentBox.attr('y'))
       );
-      console.log(line);
     }
     else {
       line = (0, 0, 0, 0);
     }
-
+console.log(line);
     svg.line(data[node].nid, 
-/*
-      (square.width * (nodeCounter + 1)) , 
-      (square.height * (nodeCounter + 1)) , 
-      (square.xOffset * (nodeCounter + 2)) + (square.width * (nodeCounter + 2)), 
-      (square.yOffset * (nodeCounter + 2)) + (square.height * (nodeCounter + 2)), 
-*/
       line[0], line[1], line[2], line[3], {
         id: data[node].nid,
-        fill: square.fill,
-        stroke: square.stroke,
+        stroke: data[node].stroke,
         strokeWidth: square.strokeWidth
       });
     nodeCounter++;
