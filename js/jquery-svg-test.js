@@ -34,12 +34,21 @@ var makeFancy = function(svg) {
 var makeData = function(svg) {
   // text, color, parent
   var data = {
-    'node0': {'id': 'node0', 'text': 'hello 0', 'fill': '#ED83A2', 'fillStroke': '#ddd', 'stroke': '#ddd', 'parent': null, 'scalar': 1},
-    'node1': {'id': 'node1', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 3},
-/*     'node4': {'id': 'node4', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 0.5}, */
-/*     'node5': {'id': 'node5', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 2}, */
-    'node2': {'id': 'node2', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node1', 'scalar': 1.5},
-    'node3': {'id': 'node3', 'text': 'hello 3', 'fill': '#FC064C', 'fillStroke': '#ddd', 'stroke': '#777', 'parent': 'node2', 'scalar': 1.5}
+    'row0' : {
+      'node0': {'id': 'node0', 'text': 'hello 0', 'fill': '#ED83A2', 'fillStroke': '#ddd', 'stroke': '#ddd', 'parent': null, 'scalar': 1}
+    },
+    'row1' : {
+      'node1': {'id': 'node1', 'text': 'hello 1', 'fill': '#D32959', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 1},
+      'node4': {'id': 'node4', 'text': 'hello 1', 'fill': '#E54CCF', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 1},
+      'node5': {'id': 'node5', 'text': 'hello 1', 'fill': '#B5159E', 'fillStroke': '#ddd', 'stroke': '#bbb', 'parent': 'node0', 'scalar': 1}
+    },
+    'row2' : {
+      'node2': {'id': 'node2', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node1', 'scalar': 1},
+    },
+    'row3' : {
+      'node3': {'id': 'node3', 'text': 'hello 3', 'fill': '#FC064C', 'fillStroke': '#ddd', 'stroke': '#777', 'parent': 'node2', 'scalar': 1}
+    }
+   
   };
 
 /*
@@ -54,66 +63,71 @@ var buildNodeMap = function(svg, data) {
   var square = {
     'width': 30,
     'height': 30,
-    'xOffset' : 140,
+    'xOffset' : 60,
     'yOffset' : 80,
     'fill' : '#666666',
     'stroke' : '#444444',
     'strokeWidth' : 1
   }
-  var rowCounter = 0;
 
+  var rowCounter = 0;  
   // Build Boxes
-  for (node in data) {
-    
-    var position;
-    if(data[node].parent !== null) {
-      var parent = $('#' + data[node].parent, svg.root());
-      var currentBox = $('#' + data[node].id, svg.root());
-      position = Array (
-        square.xOffset  * rowCounter,
-        square.yOffset * rowCounter,
-        square.width * data[node].scalar,
-        square.height * data[node].scalar
-      );
-    }
-    else {
-      position = Array (square.xOffset  * rowCounter, square.yOffset * rowCounter, square.width * data[node].scalar, square.height * data[node].scalar);
-    }
+  for (row in data) {
+    var colCounter = 1;  
+    for (node in data[row]) { 
 
-    svg.rect(position[0], position[1], position[2], position[3], {
-      id: data[node].id,
-      fill: data[node].fill,
-      stroke: square.stroke,
-      strokeWidth: square.strokeWidth
-    });
-    rowCounter++;
+      var position;
+      if(data[row][node].parent !== null) {
+        var parent = $('#' + data[row][node].parent, svg.root());
+        var currentBox = $('#' + data[row][node].id, svg.root());
+        position = Array (
+          square.xOffset  * rowCounter + colCounter * (square.width + square.xOffset),
+          square.yOffset * rowCounter,
+          square.width * data[row][node].scalar,
+          square.height * data[row][node].scalar
+        );
+      }
+      else {
+        position = Array (square.xOffset  * rowCounter, square.yOffset * rowCounter, square.width * data[row][node].scalar, square.height * data[row][node].scalar);
+      }
+      svg.rect(position[0], position[1], position[2], position[3], {
+        id: data[row][node].id,
+        fill: data[row][node].fill,
+        stroke: square.stroke,
+        strokeWidth: square.strokeWidth
+      });
+      colCounter++;
+
+    }
+      rowCounter++;
   }
 
   // Build Lines
-  nodeCounter = 0;
-  for (node in data) {
-    var line;
-    if(data[node].parent !== null) {
-      var parent = $('#' + data[node].parent, svg.root());
-      var currentBox = $('#' + data[node].id, svg.root());
-      line = Array (
-        Number(parent.attr('width')) + Number(parent.attr('x')),
-        Number(parent.attr('height')) + Number(parent.attr('y')),
-        Number(currentBox.attr('x')),
-        Number(currentBox.attr('y'))
-      );
-    }
-    else {
-      line = (0, 0, 0, 0);
-    }
-console.log(line);
-    svg.line(data[node].nid, 
-      line[0], line[1], line[2], line[3], {
-        id: data[node].nid,
-        stroke: data[node].stroke,
-        strokeWidth: square.strokeWidth
-      });
-    nodeCounter++;
-  }
 
+  for (row in data) {
+    nodeCounter = 0;
+    for (node in data[row]) {
+      var line;
+      if(data[row][node].parent !== null) {
+        var parent = $('#' + data[row][node].parent, svg.root());
+        var currentBox = $('#' + data[row][node].id, svg.root());
+        line = Array (
+          Number(parent.attr('width')) + Number(parent.attr('x')),
+          Number(parent.attr('height')) + Number(parent.attr('y')),
+          Number(currentBox.attr('x')),
+          Number(currentBox.attr('y'))
+        );
+      }
+      else {
+        line = (0, 0, 0, 0);
+      }
+      svg.line(data[row][node].nid, 
+        line[0], line[1], line[2], line[3], {
+          id: data[row][node].nid,
+          stroke: data[row][node].stroke,
+          strokeWidth: square.strokeWidth
+        });
+      nodeCounter++;
+    }
+  }
 }
