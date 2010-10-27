@@ -47,20 +47,19 @@ var makeData = function(svg) {
     },
     'row3' : {
       'node3': {'id': 'node3', 'text': 'hello 3', 'fill': '#FC064C', 'fillStroke': '#ddd', 'stroke': '#777', 'parent': 'node2', 'scalar': 1}
-    }
+    },
+    'row4' : {
+      'node6': {'id': 'node6', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node4', 'scalar': 1},
+      'node7': {'id': 'node7', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node4', 'scalar': 1},
+      'node8': {'id': 'node8', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node4', 'scalar': 1},
+    },
    
   };
-
-/*
-  svg.rect(0, 0, 10, 10, {id: 'node0', 
-      fill: '#00ff00', stroke: 'black', strokeWidth: 2}); 
-*/
-
   buildNodeMap(svg, data);
 }
 
 var buildNodeMap = function(svg, data) {
-  var square = {
+  var boxStyle = {
     'width': 30,
     'height': 30,
     'xOffset' : 60,
@@ -70,40 +69,45 @@ var buildNodeMap = function(svg, data) {
     'strokeWidth' : 1
   }
 
+  buildNodeBoxes(svg, data, boxStyle);
+  buildNodeLines(svg,data, boxStyle);
+}
+
+var buildNodeBoxes = function(svg, data, boxStyle) {
   var rowCounter = 0;  
   // Build Boxes
   for (row in data) {
     var colCounter = 1;  
     for (node in data[row]) { 
-
       var position;
       if(data[row][node].parent !== null) {
         var parent = $('#' + data[row][node].parent, svg.root());
         var currentBox = $('#' + data[row][node].id, svg.root());
         position = Array (
-          square.xOffset  * rowCounter + colCounter * (square.width + square.xOffset),
-          square.yOffset * rowCounter,
-          square.width * data[row][node].scalar,
-          square.height * data[row][node].scalar
+          boxStyle.xOffset  * rowCounter + colCounter * (boxStyle.width + boxStyle.xOffset),
+          boxStyle.yOffset * rowCounter,
+          boxStyle.width * data[row][node].scalar,
+          boxStyle.height * data[row][node].scalar
         );
       }
       else {
-        position = Array (square.xOffset  * rowCounter, square.yOffset * rowCounter, square.width * data[row][node].scalar, square.height * data[row][node].scalar);
+        position = Array (boxStyle.xOffset  * rowCounter, boxStyle.yOffset * rowCounter, boxStyle.width * data[row][node].scalar, boxStyle.height * data[row][node].scalar);
       }
       svg.rect(position[0], position[1], position[2], position[3], {
         id: data[row][node].id,
         fill: data[row][node].fill,
-        stroke: square.stroke,
-        strokeWidth: square.strokeWidth
+        stroke: boxStyle.stroke,
+        strokeWidth: boxStyle.strokeWidth
       });
       colCounter++;
 
     }
-      rowCounter++;
+    rowCounter++;
   }
+}
 
+var buildNodeLines = function(svg,data, boxStyle) {
   // Build Lines
-
   for (row in data) {
     nodeCounter = 0;
     for (node in data[row]) {
@@ -125,7 +129,7 @@ var buildNodeMap = function(svg, data) {
         line[0], line[1], line[2], line[3], {
           id: data[row][node].nid,
           stroke: data[row][node].stroke,
-          strokeWidth: square.strokeWidth
+          strokeWidth: boxStyle.strokeWidth
         });
       nodeCounter++;
     }
