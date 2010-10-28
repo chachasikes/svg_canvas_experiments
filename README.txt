@@ -1,0 +1,1 @@
+These are just experiments with canvas & svg & javascript.
