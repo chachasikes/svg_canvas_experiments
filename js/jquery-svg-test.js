@@ -1,5 +1,7 @@
+var svg = svg || {};
+
 $(document).ready(function(){
-  var svg =  $('#svg-image').svg({
+    svg =  $('#svg-image').svg({
 /*     loadURL: 'images/diagram.svg', */
     loadURL: 'images/pink-gradient.svg',
     onLoad: loadSVG
@@ -20,19 +22,17 @@ var loadSVG = function(svg) {
       fill: 'red', stroke: 'black', strokeWidth: 3});
 */
 
-  svg.configure({offsetWidth: 300, offsetHeight: 300}, true);
-//  makeFancy(svg);
-makeData(svg);
+  svg.configure({offsetWidth: 0, offsetHeight: 0, width: 700, height: 400, viewBox: '0 0 700 400'}, true);
+  makeData(svg);
 }
-
-var makeFancy = function(svg) {
-/*   console.log(svg); */
+/**
+ * Find and change an element in an existing svg.
+ */
+var makeChange = function(svg) {
   $('#top1', svg.root()).attr('fill', '#ffcc00');
 }
 
-
 var makeData = function(svg) {
-  // text, color, parent
   var data = {
     'row0' : {
       'node0': {'id': 'node0', 'text': 'hello 0', 'fill': '#ED83A2', 'fillStroke': '#ddd', 'stroke': '#ddd', 'parent': null, 'scalar': 1}
@@ -66,23 +66,28 @@ var buildNodeMap = function(svg, data) {
     'yOffset' : 80,
     'fill' : '#666666',
     'stroke' : '#444444',
-    'strokeWidth' : 1
+    'strokeWidth' : 1,
+    'labelWidth' : 100,
   }
 
   buildNodeBoxes(svg, data, boxStyle);
   buildNodeLines(svg,data, boxStyle);
+/*   buildLabels(svg, data, boxStyle); */
 }
-
+/**
+ * Create and position boxes.
+ */
 var buildNodeBoxes = function(svg, data, boxStyle) {
   var rowCounter = 0;  
-  // Build Boxes
   for (row in data) {
+    // Provide a positive number for positioning boxes horizontally.
     var colCounter = 1;  
     for (node in data[row]) { 
       var position;
       if(data[row][node].parent !== null) {
+        // Get the position of the parent.
         var parent = $('#' + data[row][node].parent, svg.root());
-        var currentBox = $('#' + data[row][node].id, svg.root());
+        // Create an array of positions.
         position = Array (
           boxStyle.xOffset  * rowCounter + colCounter * (boxStyle.width + boxStyle.xOffset),
           boxStyle.yOffset * rowCounter,
@@ -91,21 +96,37 @@ var buildNodeBoxes = function(svg, data, boxStyle) {
         );
       }
       else {
-        position = Array (boxStyle.xOffset  * rowCounter, boxStyle.yOffset * rowCounter, boxStyle.width * data[row][node].scalar, boxStyle.height * data[row][node].scalar);
+        // Provide a default position, usually for the first box.
+        position = Array (
+          boxStyle.xOffset  * rowCounter, 
+          boxStyle.yOffset * rowCounter, 
+          boxStyle.width * data[row][node].scalar, 
+          boxStyle.height * data[row][node].scalar);
       }
+      // Build the box svg element.
       svg.rect(position[0], position[1], position[2], position[3], {
+        onclick: "boxClick(evt)",
         id: data[row][node].id,
         fill: data[row][node].fill,
         stroke: boxStyle.stroke,
         strokeWidth: boxStyle.strokeWidth
       });
+      // Iterate through each box in a row.
       colCounter++;
-
     }
     rowCounter++;
   }
 }
 
+function boxClick(evt) {
+  var rect = evt.target;
+  var fill = rect.getAttribute("fill");
+  rect.setAttribute("fill", '#ffcc00');
+}
+
+/**
+ * Draw lines between boxes.
+ */
 var buildNodeLines = function(svg,data, boxStyle) {
   // Build Lines
   for (row in data) {
@@ -134,4 +155,84 @@ var buildNodeLines = function(svg,data, boxStyle) {
       nodeCounter++;
     }
   }
+}
+
+/**
+ * Label boxes
+ */
+var buildLabels = function(svg, data, boxStyle) {
+/*
+  var defs = svg.defs(); 
+  var path = svg.createPath(); 
+  svg.path(defs, path.move(100, 200).curveC([[200, 
+      100, 300, 0, 400, 100], [500, 200, 600, 300, 700, 
+      200], [800, 100, 900, 100, 900, 100]]), {id: 
+      "MyPath"}); 
+  svg.describe("Example toap02 - tspan within textPath"); 
+  svg.use("#MyPath", {fill: "none", stroke: "red"}); 
+  var text = svg.text("", {fontFamily: "Verdana", 
+      fontSize: "42.5", fill: "blue"}); 
+  var texts = svg.createText(); 
+  svg.textpath(text, "#MyPath", texts.string("Curvy ").span("Lines", {dy: -30, fill: "red"}).span(",", 
+      {dy: 30}).string(" then we go down, then up again")); 
+  
+*/
+
+/*
+  var defs = svg.defs(); 
+  var path = svg.createPath(); 
+  svg.path(defs, path.move(10, 300).curveC([[400, 380], [500, 300, 700, 
+      200], [800, 100, 900, 100, 900, 100]]), {id: 
+      "MyPath"}); 
+  var text = svg.text("", {fontFamily: "Verdana", 
+      fontSize: "20", fill: "#000000"}); 
+  var texts = svg.createText(); 
+  svg.textpath(text, "#MyPath", texts.string("This is a curved path for text.").span("So cool!", {dy:3, fill: "#777777", fontSize: "30"})); 
+*/
+  var rowCounter = 0;  
+  for (row in data) {
+    // Provide a positive number for positioning boxes horizontally.
+    var colCounter = 1;  
+    for (node in data[row]) { 
+      var position;
+      if(data[row][node].parent !== null) {
+        // Get the position of the parent.
+        var parent = $('#' + data[row][node].parent, svg.root());
+        // Create an array of positions.
+        position = Array (
+          boxStyle.xOffset  * rowCounter + colCounter * (boxStyle.width + boxStyle.xOffset ),
+          boxStyle.yOffset * rowCounter,
+          boxStyle.width * data[row][node].scalar/*  + Number(boxStyle.labelWidth) */,
+          boxStyle.height * data[row][node].scalar
+        );
+      }
+      else {
+        // Provide a default position, usually for the first box.
+        position = Array (
+          boxStyle.xOffset  * rowCounter, 
+          boxStyle.yOffset * rowCounter, 
+          boxStyle.width * data[row][node].scalar, 
+          boxStyle.height * data[row][node].scalar
+        );
+      }
+console.log(position);
+      // Build the box svg element.
+  var defs = svg.defs(); 
+  var path = svg.createPath(); 
+  svg.path($('#' + data[row][node].id, svg.root()), path.move(10*rowCounter,10*rowCounter, false).horiz(100), {id: 
+      "MyPath"}); 
+  var text = svg.text("", {
+        fontFamily: "Verdana", 
+        fontSize: "10", 
+        fill: "#000000"
+      }); 
+  var texts = svg.createText(); 
+  svg.textpath(text, "#MyPath", texts.string(data[row][node].text));
+path.reset();
+      // Iterate through each box in a row.
+      colCounter++;
+    }
+    rowCounter++;
+  }
+
 }
