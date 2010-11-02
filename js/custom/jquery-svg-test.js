@@ -53,6 +53,11 @@ var makeData = function(svg) {
       'node7': {'id': 'node7', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node4', 'scalar': 1},
       'node8': {'id': 'node8', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': 'node4', 'scalar': 1},
     },
+    'row5' : {
+      'node6': {'id': 'node6', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': null, 'scalar': 1},
+      'node7': {'id': 'node7', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': null, 'scalar': 1},
+      'node8': {'id': 'node8', 'text': 'hello 2', 'fill': '#930930', 'fillStroke': '#ddd', 'stroke': '#999', 'parent': null, 'scalar': 1},
+    },
    
   };
   buildNodeMap(svg, data);
@@ -60,10 +65,10 @@ var makeData = function(svg) {
 
 var buildNodeMap = function(svg, data) {
   var boxStyle = {
-    'width': 30,
-    'height': 30,
-    'xOffset' : 60,
-    'yOffset' : 80,
+    'width': 20,
+    'height': 20,
+    'xOffset' : 40,
+    'yOffset' : 40,
     'fill' : '#666666',
     'stroke' : '#444444',
     'strokeWidth' : 1,
@@ -74,6 +79,7 @@ var buildNodeMap = function(svg, data) {
   buildNodeLines(svg,data, boxStyle);
 /*   buildLabels(svg, data, boxStyle); */
 }
+
 /**
  * Create and position boxes.
  */
@@ -95,7 +101,18 @@ var buildNodeBoxes = function(svg, data, boxStyle) {
           boxStyle.height * data[row][node].scalar
         );
       }
+      else if (data[row][node].parent === null && rowCounter != 0) {
+        // Not the first null row - list nodes with no parents.
+        position = Array (
+          boxStyle.xOffset  * rowCounter + colCounter * (boxStyle.width + boxStyle.xOffset),
+          boxStyle.yOffset * rowCounter,
+          boxStyle.width * data[row][node].scalar,
+          boxStyle.height * data[row][node].scalar
+        );
+        
+      }
       else {
+
         // Provide a default position, usually for the first box.
         position = Array (
           boxStyle.xOffset  * rowCounter, 
@@ -109,8 +126,10 @@ var buildNodeBoxes = function(svg, data, boxStyle) {
         id: data[row][node].id,
         fill: data[row][node].fill,
         stroke: boxStyle.stroke,
-        strokeWidth: boxStyle.strokeWidth
+        strokeWidth: boxStyle.strokeWidth,
+        parent: data[row][node].parent
       });
+
       // Iterate through each box in a row.
       colCounter++;
     }
@@ -122,7 +141,12 @@ function boxClick(evt) {
   var rect = evt.target;
   var fill = rect.getAttribute("fill");
   rect.setAttribute("fill", '#ffcc00');
-  rect.setAttribute("draggable", 'true');
+  var parent = rect.getAttribute("parent");
+
+  $.ajax({ url: "ajaxtest.html", context: document.body, success: function(){
+        alert("done");
+      }});
+
 }
 
 /**
