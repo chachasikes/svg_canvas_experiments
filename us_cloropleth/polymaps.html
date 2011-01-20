@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>USMAP</title>
+    <script type="text/javascript" src="https://github.com/simplegeo/polymaps/raw/master/polymaps.js"></script>
+    <link href="https://github.com/simplegeo/polymaps/raw/master/examples/example.css" media="screen" rel="stylesheet" type="text/css" /> 
+    
+    <style type="text/css">
+
+      body {
+        background: #E6E6E6;
+      }
+
+      .layer path {
+        fill: none;
+        vector-effect: non-scaling-stroke;
+      }
+
+      #county path {
+        stroke: rgb(192, 192, 192);
+        stroke-opacity: .25;
+        shape-rendering: crispEdges;
+      }
+
+      #state path {
+        stroke: #fff;
+        stroke-width: 1.5px;
+      }
+
+      #copy {
+        color: #000;
+        opacity: .5;
+      }
+
+      #copy a {
+        color: #000;
+      }
+    </style>
+  </head>
+  <body id="map">
+    <script type="text/javascript">
+    var po = org.polymaps;
+
+    var map = po.map()
+        .container(document.getElementById("map").appendChild(po.svg("svg")))
+        .center({lat: 39, lon: -96})
+        .zoom(4)
+        .zoomRange([3, 7])
+        .add(po.interact());
+
+
+    map.add(po.geoJson()
+        .url("http://polymaps.appspot.com/state/{Z}/{X}/{Y}.json")
+        .id("state"));
+    </script>
+  </body>
+</html>

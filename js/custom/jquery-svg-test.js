@@ -144,7 +144,7 @@ function boxClick(evt) {
   var parent = rect.getAttribute("parent");
 
   $.ajax({ url: "ajaxtest.html", context: document.body, success: function(){
-        alert("done");
+      // @TODO see what we would do here.
       }});
 
 }
@@ -240,7 +240,7 @@ var buildLabels = function(svg, data, boxStyle) {
           boxStyle.height * data[row][node].scalar
         );
       }
-console.log(position);
+/* console.log(position); */
       // Build the box svg element.
   var defs = svg.defs(); 
   var path = svg.createPath(); 
@@ -253,11 +253,26 @@ console.log(position);
       }); 
   var texts = svg.createText(); 
   svg.textpath(text, "#MyPath", texts.string(data[row][node].text));
-path.reset();
+  path.reset();
       // Iterate through each box in a row.
       colCounter++;
     }
     rowCounter++;
   }
-
+}
+/**
+ * Create an interaction which will select a box, load a value, select another box, load another value
+ * and when the second value is clicked, send an ajax command of the data
+ * Later on, the click events will have some visuals. Clicking the first element will create the start
+ * of a line. Clicking the second will end the line. The line will stay put.
+ * 
+ * also provide a cancel
+ *
+ */
+var parentAssigner = function(){
+  var assigner = {}; // An object that will contain the data.
+  assigner.origin = null;
+  assigner.parent = null;
+  assigner.clickStats = null;
+  
 }
